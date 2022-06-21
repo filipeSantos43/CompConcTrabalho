@@ -6,9 +6,15 @@
 #include <time.h>
 
 
+#define MAX_THREAD 4
+
 float **matrizA; 
 float **matrizB; 
 float **identidade; 
+
+
+float det;
+
 
 
 void preencherMatriz(float **matriz, int dim){
@@ -20,6 +26,12 @@ void preencherMatriz(float **matriz, int dim){
         }
     }
 
+}
+
+void* Det(void* arg)
+{
+	
+	
 }
 
 
@@ -181,6 +193,15 @@ int main(void) {
     }
     
     
+
+
+    
+    printf("\nMatriz\n");
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++)
+            printf(matrizA[i][j]);
+		printf("\n");
+	}
     
     
   GET_TIME(inicio);  
@@ -201,7 +222,20 @@ int main(void) {
    printf("\n---------------------------------------------------------------------------\n");
    printf("\nTempo sequencial: %lf\n", delta1);
    
-   
+       
+    pthread_t threads[MAX_THREAD];
+    
+   for (int i = 0; i < MAX_THREAD; i++) {
+            int* p;
+            pthread_create(&threads[i], NULL, Det, (void*)(p));
+        }
+        // joining and waiting for all threads to complete
+        for (int i = 0; i < MAX_THREAD; i++){
+            pthread_join(threads[i], NULL);
+         }
+
+       // destroy threats
+    pthread_exit(NULL);
    
    
   
